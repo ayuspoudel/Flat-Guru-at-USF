@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+
 const postSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -9,20 +10,46 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+
     location: {
-      type:String,
-      required:true
+        type: {
+            type: String, 
+            enum: ['Point'], 
+            required: true,
+        },
+        coordinates: {
+            type: [Number],
+            required: true,
+        },
     },
-    jobPoster:{
-    createdBy: {
-      type: mongoose.Types.ObjectId,
-      ref: 'User',
+    roomDiscription: {
+      noofPeople: {
+        type: Number,
+        required: true,
+      },
+      noOfRooms: {
+        type: Number,
+        required: true,
+      },
+      noOfBathrooms: {
+        type: Number,
+        required: true,
+      },
+      fullyFurnished: { // Typo corrected
+        type: Boolean,
+        required: true,
+      },
     },
-    name: {
-      type: String,
-      required: true,
+    jobPoster: {
+      createdBy: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+      },
+      name: {
+        type: String,
+        required: true,
+      },
     },
-  },
     price: {
       type: Number,
       required: true,
@@ -31,8 +58,19 @@ const postSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-},
+    userVerified: {
+      type: Boolean,
+      default: false,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    }
+}, 
 { timestamps: true }
 );
+
+
+postSchema.index({ location: '2dsphere' });
 
 module.exports = mongoose.model('Post', postSchema);
