@@ -20,10 +20,10 @@ cloudinary.config({
 });
 
 const connectDB = require('./db/connect');
-
-
+const stripeController = require('./routes/stripe');
 const authRouter = require('./routes/auth');
 const postRouter = require('./routes/postRent');
+const kycRouter = require('./routes/userVerification');
 
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
@@ -32,13 +32,13 @@ app.set('trust proxy', 1);
 
 // Middleware setup
 
-// app.use(cors({
-//   origin: 
-//   // process.env.HOST_URL  
-//     'http://localhost:3000',
-//   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
-//   credentials: true
-// }));
+app.use(cors({
+  origin: 
+  // process.env.HOST_URL  
+    'http://localhost:5173',
+  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
+  credentials: true
+}));
 
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
@@ -50,6 +50,8 @@ app.use(fileUpload({ useTempFiles: false }));
 // Routes  
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/post',  postRouter);
+app.use('/api/v1/kyc', kycRouter);
+app.use('/api/v1/stripe', stripeController);
 
 
 
